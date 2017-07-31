@@ -20,55 +20,78 @@ namespace ActiveDirectoryAPI
                 {
                     ID = 1,
                     UserName = "The Dude",
-                    Password = "MyPassword", 
+                    Password = "MyPassword",
                     Domain = "MyDomain",
+                    Groups = new List<Group>()
+                    {
+                        new Group()
+                        {
+                            ID = 1,
+                            GroupName = "Project Management",
+                            Description = "Full access Project Management"
+                        },
+                        new Group()
+                        {
+                            ID = 2,
+                            GroupName = "Payroll",
+                            Description = "Full access Payroll"
+                        }
+                    }
                 },
                 new User()
                 {
                     ID = 2,
                     UserName = "The Other Dude",
                     Password = "MyPassword",
-                    Domain = "MyDomain"
+                    Domain = "MyDomain",
+                    Groups = new List<Group>(){
+                        new Group()
+                        {
+                            ID = 2,
+                            GroupName = "Payroll",
+                            Description = "Full access Payroll"
+                        }
+                    }
                 }
             };
 
-            Groups = new List<Group>()
-            {
-                new Group()
-                {
-                    ID = 1,
-                    GroupName = "Project Management",
-                    Description = "Full access Project Management"
-                },
-                new Group()
-                {
-                    ID = 2, 
-                    GroupName = "Payroll",
-                    Description = "Full access Payroll"
-                }
-            };
+            //Groups = new List<Group>()
+            //{
+            //    new Group()
+            //    {
+            //        ID = 1,
+            //        GroupName = "Project Management",
+            //        Description = "Full access Project Management"
+            //    },
+            //    new Group()
+            //    {
+            //        ID = 2,
+            //        GroupName = "Payroll",
+            //        Description = "Full access Payroll"
+            //    }
+            //};
 
-            UserGroups = new List<UserGroup>()
-            {
-                new UserGroup()
-                {
-                    ID = 1,
-                    UserID = 1,
-                    GroupID = 1
-                },
-                new UserGroup()
-                {
-                    ID = 2,
-                    UserID = 1,
-                    GroupID = 2
-                },
-                new UserGroup()
-                {
-                    ID = 3, 
-                    UserID = 2,
-                    GroupID = 2
-                }
-            };
+            //UserGroups = new List<UserGroup>()
+            //{
+            //    new UserGroup()
+            //    {
+            //        ID = 1,
+            //        UserID = 1,
+            //        GroupID = 1
+            //    },
+            //    new UserGroup()
+            //    {
+            //        ID = 2,
+            //        UserID = 1,
+            //        GroupID = 2
+            //    },
+            //    new UserGroup()
+            //    {
+            //        ID = 3, 
+            //        UserID = 2,
+            //        GroupID = 2
+            //    }
+            //};
         }
     }
 }

@@ -7,9 +7,8 @@ namespace ActiveDirectoryAPI.Model
 {
     public class UserGroup
     {
-        public int ID { get; set; }
-        public int UserID { get; set; }
-        public int GroupID { get; set; }
-
+        //public int ID { get; set; }
+        //public int UserID { get; set; }
+        //public int GroupID { get; set; }
     }
 }
