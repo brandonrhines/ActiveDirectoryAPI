@@ -56,6 +56,8 @@ namespace ActiveDirectoryAPI
 #endif
             var connectionString = Startup.Configuration["connectionStrings:userInfoDBConnectionString"];
             services.AddDbContext<UserInfoContext>(o => o.UseSqlServer(connectionString));
+
+            services.AddScoped<IUserInfoRepository, UserInfoRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

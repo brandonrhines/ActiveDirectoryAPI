@@ -16,25 +16,49 @@ namespace ActiveDirectoryAPI.Controllers
     {
         private ILogger<GroupsController> _logger;
         private IMailService _mailService;
+        private IUserInfoRepository _userInfoRepository;
 
-        public GroupsController(ILogger<GroupsController> logger, IMailService mailService)
+        public GroupsController(ILogger<GroupsController> logger, IMailService mailService, IUserInfoRepository userInfoRepository)
         {
             _logger = logger;
             _mailService = mailService;
-
+            _userInfoRepository = userInfoRepository;
         }
         [HttpGet("{userID}/groups")]
         public IActionResult GetGroups(int userID)
         {
             try
             {
-                var user = UserDataStore.Current.Users.FirstOrDefault(u => u.ID == userID);
-                if (user == null)
+                //var user = UserDataStore.Current.Users.FirstOrDefault(u => u.ID == userID);
+
+                if (!_userInfoRepository.UserExists(userID))
                 {
-                    _logger.LogInformation($"User with ID {userID} was not found.");
+                    _logger.LogInformation($"User with ID {userID} wasn't found when accessing points of interest");
                     return NotFound();
                 }
-                return Ok(user.Groups);
+
+                var groupsForUser = _userInfoRepository.GetGroupsForUser(userID);
+
+                var groupsForUserResults = new List<Group>();
+
+                foreach(var gp in groupsForUser)
+                {
+                    groupsForUserResults.Add(new Group()
+                    {
+                        ID = gp.ID,
+                        GroupName = gp.GroupName,
+                        Description = gp.Description
+                    });
+                }
+
+                return Ok(groupsForUserResults);
+                
+                //if (user == null)
+                //{
+                //    _logger.LogInformation($"User with ID {userID} was not found.");
+                //    return NotFound();
+                //}
+                //return Ok(user.Groups);
             }
             catch (Exception ex)
             {
@@ -45,18 +69,39 @@ namespace ActiveDirectoryAPI.Controllers
         [HttpGet("{userID}/groups/{groupID}", Name = "GetGroup")]
         public IActionResult GetGroup(int userID, int groupID)
         {
-            var user = UserDataStore.Current.Users.FirstOrDefault(u => u.ID == userID);
-            if (user == null)
+            if (!_userInfoRepository.UserExists(userID))
             {
                 return NotFound();
             }
 
-            var group = user.Groups.FirstOrDefault(g => g.ID == groupID);
-            if (group == null)
+            var group = _userInfoRepository.GetGroupForUser(userID, groupID);
+
+            if(group == null)
             {
                 return NotFound();
             }
-            return Ok(group);
+
+            var groupResult = new Group()
+            {
+                ID = group.ID,
+                GroupName = group.GroupName,
+                Description = group.Description
+            };
+
+            return Ok(groupResult);
+
+            //var user = UserDataStore.Current.Users.FirstOrDefault(u => u.ID == userID);
+            //if (user == null)
+            //{
+            //    return NotFound();
+            //}
+
+            //var group = user.Groups.FirstOrDefault(g => g.ID == groupID);
+            //if (group == null)
+            //{
+            //    return NotFound();
+            //}
+            //return Ok(group);
         }
         [HttpPost("{userID}/groups")]
         public IActionResult CreateGroup(int userID, [FromBody] GroupForCreation group)

@@ -12,5 +12,9 @@ namespace ActiveDirectoryAPI.Entities
         public string GroupName { get; set; }
         [MaxLength(200)]
         public string Description { get; set; }
+        public int UserID { get; set; }
+        [ForeignKey("UserID")]
+        public User UserName { get; set; }
+
     }
 }
