@@ -10,7 +10,7 @@ namespace ActiveDirectoryAPI.Entities
         [Required]
         [MaxLength(50)]
         public string GroupName { get; set; }
-
-        //public string Description { get; set; }
+        [MaxLength(200)]
+        public string Description { get; set; }
     }
 }

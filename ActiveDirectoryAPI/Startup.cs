@@ -12,6 +12,8 @@ using Microsoft.AspNetCore.Mvc.Formatters;
 using NLog.Extensions.Logging;
 using ActiveDirectoryAPI.Services;
 using Microsoft.Extensions.Configuration;
+using ActiveDirectoryAPI.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace ActiveDirectoryAPI
 {
@@ -23,7 +25,8 @@ namespace ActiveDirectoryAPI
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appSettings.json", optional: false, reloadOnChange: true)
-                .AddJsonFile($"appSettings.{env.EnvironmentName}.json", optional:true, reloadOnChange:true);
+                .AddJsonFile($"appSettings.{env.EnvironmentName}.json", optional:true, reloadOnChange:true)
+                .AddEnvironmentVariables();
 
             Configuration = builder.Build();
         }
@@ -51,11 +54,13 @@ namespace ActiveDirectoryAPI
 #else
             services.AddTransient<IMailService, CloudMailService>();
 #endif
-
+            var connectionString = Startup.Configuration["connectionStrings:userInfoDBConnectionString"];
+            services.AddDbContext<UserInfoContext>(o => o.UseSqlServer(connectionString));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory,
+            UserInfoContext userInfoContext)
         {
             loggerFactory.AddConsole();
 
@@ -71,6 +76,8 @@ namespace ActiveDirectoryAPI
             {
                 app.UseExceptionHandler();
             }
+
+            userInfoContext.EnsureSeedDataForContext();
 
             app.UseStatusCodePages();
 

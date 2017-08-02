@@ -11,7 +11,6 @@ namespace ActiveDirectoryAPI
         public static UserDataStore Current { get; } = new UserDataStore();
         public List<User> Users { get; set; }
         public List<Group> Groups { get; set; }
-        public List<UserGroup> UserGroups { get; set; }
         public UserDataStore()
         {
             Users = new List<User>()
